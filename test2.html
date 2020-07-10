@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Mailer</title>
+</head>
+
+<body>
+    <form name="contact">
+        <input type="hidden" name="subject" value="[Mailer] Message from contact form">
+        <br>
+        <label>Name</label>
+        <input type="text" name="name" required>
+        <br>
+        <label>Email</label>
+        <input type="email" name="email" required>
+        <br>
+        <label>Message</label>
+        <textarea name="message" rows="4" required></textarea>
+        <br>
+        <button type="submit" name="submit" value="">Submit</button>
+    </form>
+
+    <script src="https://www.google.com/recaptcha/api.js?render=reCAPTCHA_site_key"></script>
+    <script>
+        function sendData(data, onError, onSuccess, url) {
+            console.log('Sending data:', data);
+
+            const xhr = new XMLHttpRequest();
+
+            let urlEncodedData = '',
+                urlEncodedDataPairs = [],
+                name;
+
+            for (name in data) {
+                urlEncodedDataPairs.push(encodeURIComponent(name) + '=' + encodeURIComponent(data[name]));
+            }
+
+            urlEncodedData = urlEncodedDataPairs.join('&').replace(/%20/g, '+');
+
+            xhr.addEventListener('load', onSuccess);
+            xhr.addEventListener('error', onError);
+            xhr.open('POST', url);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.send(urlEncodedData);
+        }
+
+        const recaptchaEnabled = false;
+        const form = document.forms['contact'];
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const data = Object.fromEntries(new FormData(form));
+            const onError = () => alert('Oops! Something went wrong.');
+            const onSuccess = () => alert('Yeah! Data sent.');
+            const url = 'send.php';
+
+            if (recaptchaEnabled) {
+                grecaptcha.ready(function () {
+                    grecaptcha.execute('reCAPTCHA_site_key', { action: 'contact' }).then(function (token) {
+                        data.gRecaptchaResponse = token;
+                        sendData(data, onError, onSuccess, url);
+                    });
+                });
+            } else {
+                sendData(data, onError, onSuccess, url);
+            }
+        });
+    </script>
+</body>
+
+</html>

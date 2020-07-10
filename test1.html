@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Mailer</title>
+</head>
+
+<body>
+    <form action="send.php" method="post">
+        <input type="hidden" name="subject" value="[Mailer] Message from contact form">
+        <br>
+        <label>Name</label>
+        <input type="text" name="name" required>
+        <br>
+        <label>Email</label>
+        <input type="email" name="email" required>
+        <br>
+        <label>Message</label>
+        <textarea name="message" rows="4" required></textarea>
+        <br>
+        <button type="submit" name="submit" value="">Submit</button>
+    </form>
+</body>
+
+</html>
